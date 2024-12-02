@@ -1,20 +1,30 @@
 #include "FileReader.h"
 #include "Node.h"
+#include <iostream>
+#include <chrono>
 using namespace std;
 
 void HeapSort(vector<Node*>& data);
 void Heapify(vector<Node*>& data, int size, int parent);
 void MergeSort(vector<Node*>& list, vector<Node*>& tempList, int start, int end);
 void Merge(vector<Node*>& list, vector<Node*>& tempList, int start, int middle, int end);
+void CompareAlgs(vector<Node*>& data);
 
 int main() {
     FileReader file;
+    cout << "Loading data, please wait." << endl;
+    auto start = chrono::high_resolution_clock::now();
     vector<Node*> data = file.ReadFile("../GHCNh_USW00012816_por.psv");
-    
-    HeapSort(data);
-    for (auto & node : data) {
-        node->PrintNode();
-    }
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration = end - start;
+    cout << "Time taken to load: " << duration.count() << " seconds" << endl;
+
+    CompareAlgs(data);
+
+    //HeapSort(data);
+    //for (auto & node : data) {
+    //    node->PrintNode();
+    //}
 
     return 0;
 }
@@ -66,8 +76,7 @@ void Heapify(vector<Node*>& data, int size, int parent) {
 }
 
 // Reference: Lecture Merge Sort Code Trace (Module 8)
-void MergeSort(vector<Node*>& list, vector<Node*>& tempList, int start, int end)
-{
+void MergeSort(vector<Node*>& list, vector<Node*>& tempList, int start, int end) {
     if (start < end) // effectively if sublist.size > 1
     {
         int middle = start + (end - start) / 2;
@@ -77,9 +86,9 @@ void MergeSort(vector<Node*>& list, vector<Node*>& tempList, int start, int end)
         Merge(list, tempList, start, middle, end); // combine left and right lists
     }
 }
+
 // Reference: Lecture Merge Sort Code Trace (Module 8)
-void Merge(vector<Node*>& list, vector<Node*>& tempList, int start, int middle, int end)
-{
+void Merge(vector<Node*>& list, vector<Node*>& tempList, int start, int middle, int end) {
     int indexL = start; // start index of left
     int indexR = middle + 1; // index start of right
     int current = start; // start index in the main vector
@@ -107,4 +116,22 @@ void Merge(vector<Node*>& list, vector<Node*>& tempList, int start, int middle, 
 
     for (int i = start; i <= end; i++) // update list to match tempList
         list[i] = tempList[i];
+}
+
+void CompareAlgs(vector<Node*>& data) {
+    auto data1 = data; // make copies of the original data to sort
+    auto data2 = data;
+
+    auto start = chrono::high_resolution_clock::now();
+    HeapSort(data1);
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration = end - start;
+    cout << "Time taken to heapsort: " << duration.count() << " seconds" << endl;
+
+    start = chrono::high_resolution_clock::now();
+    vector<Node*> tempData(data.size());
+    MergeSort(data2, tempData, 0, data2.size() - 1);
+    end = chrono::high_resolution_clock::now();
+    duration = end - start;
+    cout << "Time taken to mergesort: " << duration.count() << " seconds" << endl;
 }
