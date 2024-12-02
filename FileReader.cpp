@@ -26,7 +26,7 @@ vector<Node*> FileReader::ReadFile(string file) {
 Node* FileReader::Deserialize(istringstream& stream) {
     // Receives stream from file and turns data into Node object
     int yr, month, day, hour, minute;
-    float temp, dewPoint, pressure, windSpeed;
+    float temp, dewPoint;
     string token;
 
     // Discard Station ID and name
