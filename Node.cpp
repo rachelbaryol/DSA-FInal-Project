@@ -1,11 +1,7 @@
-//
-// Created by rache on 11/28/2024.
-//
-
+#include <iostream>
 #include "Node.h"
-using namespace std;
 
-Node::Node(int yr, int month, int day, int hour, int minute, float temp, float dew, float pres, float windSpeed) {
+Node::Node(int yr, int month, int day, int hour, int minute, float temp, float dew) {
     _year = yr;
     _month = month;
     _day = day;
@@ -13,6 +9,13 @@ Node::Node(int yr, int month, int day, int hour, int minute, float temp, float d
     _minute = minute;
     _temp = temp;
     _dewpoint = dew;
-    _pressure = pres;
-    _windSpeed = windSpeed;
+}
+
+float Node::getTemp() const {
+    return _temp;
+}
+
+void Node::PrintNode() const {
+    cout << _month << "-" << _day << "-" << _year << " at " << _hour << ":" << _minute << " | Temperature: "
+        << _temp << " | Dewpoint: " << _dewpoint << endl;
 }

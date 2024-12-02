@@ -1,16 +1,17 @@
 #ifndef FILEREADER_H
 #define FILEREADER_H
 #include <fstream>
-#include <iostream>
 #include <sstream>
+#include <vector>
+#include "Node.h"
 using namespace std;
 
 class FileReader {
 private:
-    void Deserialize(istringstream& stream);
+    Node* Deserialize(istringstream& stream);
 
 public:
-    void ReadFile(string file);
+    vector<Node*> ReadFile(string file);
 };
 
 

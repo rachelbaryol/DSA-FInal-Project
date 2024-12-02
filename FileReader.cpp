@@ -2,25 +2,28 @@
 #include <iostream>
 #include <sstream>
 #include "FileReader.h"
-
 #include "Node.h"
 using namespace std;
 
-void FileReader::ReadFile(string file) {
+vector<Node*> FileReader::ReadFile(string file) {
     // Reads data from psv file and establishes a Node
-    ifstream csv(file);
+    vector<Node*> data;
+    ifstream psv(file);
     string line;
-    getline(csv, line);
+    getline(psv, line);
 
-    while (getline(csv, line)) {
+    while (getline(psv, line)) {
         if (line != "") {
             istringstream stream(line);
-            Deserialize(stream);
+            Node* node = Deserialize(stream);
+            data.push_back(node);
         }
     }
+
+    return data;
 }
 
-void FileReader::Deserialize(istringstream& stream) {
+Node* FileReader::Deserialize(istringstream& stream) {
     // Receives stream from file and turns data into Node object
     int yr, month, day, hour, minute;
     float temp, dewPoint, pressure, windSpeed;
@@ -49,7 +52,7 @@ void FileReader::Deserialize(istringstream& stream) {
 
     getline(stream, token, '|');
     try {
-        day = stod(token);
+        day = stoi(token);
     }
     catch (invalid_argument) {
         day = 0;
@@ -57,7 +60,7 @@ void FileReader::Deserialize(istringstream& stream) {
 
     getline(stream, token, '|');
     try {
-        hour = stod(token);
+        hour = stoi(token);
     }
     catch (invalid_argument) {
         hour = 0;
@@ -65,7 +68,7 @@ void FileReader::Deserialize(istringstream& stream) {
 
     getline(stream, token, '|');
     try {
-        minute = stod(token);
+        minute = stoi(token);
     }
     catch (invalid_argument) {
         minute = 0;
@@ -101,50 +104,8 @@ void FileReader::Deserialize(istringstream& stream) {
         dewPoint = 0.0;
     }
 
-    // Discard dew point source info
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
+    Node* node = new Node(yr, month, day, hour, minute, temp, dewPoint);
 
-    // Pressure
-    getline(stream, token, '|');
-    try {
-        pressure = stof(token);
-    }
-    catch (invalid_argument) {
-        pressure = 0.0;
-    }
-
-    // Discard pressure source info
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-    getline(stream, token, '|');
-
-    // Wind speed
-    getline(stream, token, '|');
-    try {
-        windSpeed = stof(token);
-    }
-    catch (invalid_argument) {
-        windSpeed = 0.0;
-    }
-
-    Node* node = new Node(yr, month, day, hour, minute, temp, dewPoint, pressure, windSpeed);
-
+    return node;
 
 }
