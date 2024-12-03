@@ -9,6 +9,7 @@ void Heapify(vector<Node*>& data, int size, int parent);
 void MergeSort(vector<Node*>& list, vector<Node*>& tempList, int start, int end);
 void Merge(vector<Node*>& list, vector<Node*>& tempList, int start, int middle, int end);
 void CompareAlgs(vector<Node*>& data);
+void SortedCheck(vector<Node*>& data);
 
 int main() {
     FileReader file;
@@ -17,7 +18,7 @@ int main() {
     vector<Node*> data = file.ReadFile("../GHCNh_USW00012816_por.psv");
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double> duration = end - start;
-    cout << "Time taken to load: " << duration.count() << " seconds" << endl;
+    cout << "Time taken to load: " << duration.count() << " seconds" << endl << endl;
 
     CompareAlgs(data);
 
@@ -122,16 +123,36 @@ void CompareAlgs(vector<Node*>& data) {
     auto data1 = data; // make copies of the original data to sort
     auto data2 = data;
 
+    SortedCheck(data1);
     auto start = chrono::high_resolution_clock::now();
     HeapSort(data1);
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double> duration = end - start;
     cout << "Time taken to heapsort: " << duration.count() << " seconds" << endl;
+    SortedCheck(data1);
 
+    cout << endl;
+
+    SortedCheck(data2);
     start = chrono::high_resolution_clock::now();
     vector<Node*> tempData(data.size());
     MergeSort(data2, tempData, 0, data2.size() - 1);
     end = chrono::high_resolution_clock::now();
     duration = end - start;
     cout << "Time taken to mergesort: " << duration.count() << " seconds" << endl;
+    SortedCheck(data2);
+}
+
+void SortedCheck(vector<Node*>& data) {
+    int previous = 0;
+    for (int i = 0; i < data.size(); i++)
+    {
+        if (data[previous]->getTemp() > data[i]->getTemp())
+        {
+            cout << "The data is sorted up until index: " << i << " of " << data.size() << endl;
+            return;
+        }
+        previous = i;
+    }
+    cout << "The data is entirely sorted." << endl;
 }
